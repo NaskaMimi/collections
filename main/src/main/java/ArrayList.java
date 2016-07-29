@@ -1,51 +1,55 @@
-import java.util.Collection;
-import java.util.HashSet;
-
 public class ArrayList implements CollectionInterface
 {
-    Collection array;
+    Object[] array;
 
     public ArrayList()
     {
-        array = new HashSet();
+        array = new Object[0];
     }
 
     @Override
     public Object get(int var1) {
-        int n = 0;
-        while (array.iterator().hasNext())
-        {
-            if(n == var1)
-            {
-                return array.iterator().next();
-            } //else
-            n++;
-        }
-        return null;
+        return array[var1];
     }
 
     @Override
     public void add(Object var1) {
-        array.add(var1);
+        Object[] newArray = new Object[array.length + 1];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        newArray[array.length] = var1;
+        array = newArray;
     }
 
     @Override
     public void delete(int index) {
-        //array.delete(var1);
+        Object[] newArray = new Object[array.length - 1];
+        System.arraycopy(array, 0, newArray, 0, index);
+        System.arraycopy(array, index + 1, newArray, index + 1 - 1, array.length - (index + 1));
+        array = newArray;
     }
 
     @Override
     public void remove(Object var1) {
-        array.remove(var1);
+        int index = array.length+1;
+        for (int i=0;i<array.length;i++)
+        {
+            if(array[i] == var1) {
+                index = i;
+            }
+        }
+        if(index<array.length+1)
+        {
+          delete(index);
+        }
     }
 
     @Override
     public int size() {
-        return array.size();
+        return array.length;
     }
 
     @Override
     public boolean isEmpty() {
-        return array.isEmpty();
+        return array.length==0;
     }
 }
