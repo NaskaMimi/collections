@@ -1,85 +1,112 @@
 public class LinkedList implements CollectionInterface
 {
     public ArrayList arrayList;
+    public Entry mainEntry;
 
     public LinkedList()
     {
-        arrayList = new ArrayList();
+        mainEntry = null;
     }
 
     @Override
     public Object get(int var1) {
-        return arrayList.get(var1);
+        return getEntry(var1).element;
+    }
+
+    private Entry getEntry(int var1) {
+        return findEntry(mainEntry,size()-1,var1);
+    }
+
+    private Entry findEntry(Entry entry, int currentNumber, int expectedNumber)
+    {
+        if(currentNumber==expectedNumber)
+        {
+            return entry;
+        } else {
+            currentNumber--;
+            return findEntry(entry.prev, currentNumber, expectedNumber);
+        }
+
     }
 
     @Override
-    public void add(Object var1) {
-        arrayList.add(var1);
+    public void add(Object var1)
+    {
+        if(mainEntry==null)
+        {
+            mainEntry = new Entry(var1, null, null);
+        } else
+        {
+            Entry prevEntry = mainEntry;
+            mainEntry = new Entry(var1, null, prevEntry);
+            prevEntry.next = mainEntry;
+        }
     }
 
     @Override
-    public void delete(int index) {
-        //int index = this.getIndex(var1);
+    public void delete(int index)
+    {
+        Entry entryToDelete = getEntry(index);
+        Entry entryPrev = entryToDelete.prev;
+        Entry entryNext = entryToDelete.next;
 
-
-        ArrayList arFinal = new ArrayList();
-        for(int i=0;i<index;i++)
+        if(entryPrev!=null)
         {
-            arFinal.add(arrayList.get(i));
+            entryPrev.next = entryNext;
+        }
+        if(entryNext!=null)
+        {
+            entryNext.prev = entryPrev;
         }
 
-        for(int j=index+1;j<arrayList.size();j++)
-        {
-            arFinal.add(arrayList.get(j));
-        }
-
-        arrayList = new ArrayList();
-
-        for (int y = 0;y<arFinal.size();y++)
-        {
-            arrayList.add(arFinal.get(y));
-        }
-
+        entryToDelete = null;
     }
 
     @Override
     public void remove(Object var1) {
-        arrayList.remove(var1);
+
     }
 
     @Override
     public int size() {
-        return arrayList.size();
+        return isNextEntry(mainEntry,1);
     }
 
+    private int isNextEntry(Entry entry, int number)
+    {
+        if(entry.prev==null)
+        {
+            return number;
+        } else {
+            number++;
+            return isNextEntry(entry.prev, number);
+        }
+
+    }
     @Override
     public boolean isEmpty() {
-        return arrayList.isEmpty();
+        return size()==0;
     }
 
 
-    public void put(int index, Object objectToAdd) {
-        ArrayList arFinal = new ArrayList();
-        for(int i=0;i<index;i++)
-        {
-            arFinal.add(arrayList.get(i));
-        }
+    public void put(Object objectToAdd, int number)
+    {
+        Entry nextEntry = getEntry(number);
+        nextEntry.prev = new Entry(objectToAdd,nextEntry,nextEntry.prev);
+    }
 
-        arFinal.add(objectToAdd);
 
-        for(int j=index+1;j<arrayList.size();j++)
-        {
-            arFinal.add(arrayList.get(j));
-        }
+    private static class Entry<E>
+    {
+        E element;
+        Entry<E> next;
+        Entry<E> prev;
 
-        for (int x = 0;x<arrayList.size();x++)
+        Entry(E element, Entry<E> next, Entry<E> prev)
         {
-            arrayList.delete(x);
-        }
-
-        for (int y = 0;y<arFinal.size();y++)
-        {
-            arrayList.add(arFinal.get(y));
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
