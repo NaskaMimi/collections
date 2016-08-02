@@ -54,5 +54,15 @@ public class LinkedListTest
 
         assertEquals(linkedList.get(0), "Cat");
         assertEquals(linkedList.get(1), "Bird");
+        assertEquals(linkedList.size(), 2);
+    }
+
+    @Test
+    public void test2()
+    {
+        LinkedList linkedList = new LinkedList();
+        linkedList.add("asd");
+        linkedList.delete(0);
+        assertEquals(linkedList.size(), 0);
     }
 }

@@ -10,7 +10,8 @@ public class LinkedList implements CollectionInterface
     @Override
     public Object get(int var1)
     {
-        return getEntry(var1).element;
+        Entry entry = getEntry(var1);
+        return entry!=null?entry.element:null;
     }
 
     private Entry getEntry(int var1)
@@ -20,15 +21,19 @@ public class LinkedList implements CollectionInterface
 
     private Entry findEntry(Entry entry, int currentNumber, int expectedNumber)
     {
-        if (currentNumber == expectedNumber)
+        if(entry!=null)
         {
-            return entry;
-        }
-        else
-        {
-            currentNumber--;
-            return findEntry(entry.prev, currentNumber, expectedNumber);
-        }
+            if (currentNumber == expectedNumber)
+            {
+                return entry;
+            }
+            else
+            {
+                currentNumber--;
+                return findEntry(entry.prev, currentNumber, expectedNumber);
+            }
+        } else
+            return null;
     }
 
     @Override
@@ -49,20 +54,26 @@ public class LinkedList implements CollectionInterface
     @Override
     public void delete(int index)
     {
-        Entry entryToDelete = getEntry(index);
-        Entry entryPrev = entryToDelete.prev;
-        Entry entryNext = entryToDelete.next;
-
-        if (entryPrev != null)
+        if(size()==1)
         {
-            entryPrev.next = entryNext;
-        }
-        if (entryNext != null)
+            mainEntry = null;
+        } else
         {
-            entryNext.prev = entryPrev;
-        }
+            Entry entryToDelete = getEntry(index);
+            Entry entryPrev = entryToDelete.prev;
+            Entry entryNext = entryToDelete.next;
 
-        entryToDelete = null;
+            if (entryPrev != null)
+            {
+                entryPrev.next = entryNext;
+            }
+            if (entryNext != null)
+            {
+                entryNext.prev = entryPrev;
+            }
+
+            entryToDelete = null;
+        }
     }
 
     @Override
@@ -79,15 +90,19 @@ public class LinkedList implements CollectionInterface
 
     private int isNextEntry(Entry entry, int number)
     {
-        if (entry.prev == null)
+        if(entry!=null)
         {
-            return number;
-        }
-        else
-        {
-            number++;
-            return isNextEntry(entry.prev, number);
-        }
+            if (entry.prev == null)
+            {
+                return number;
+            }
+            else
+            {
+                number++;
+                return isNextEntry(entry.prev, number);
+            }
+        } else
+            return 0;
     }
 
     @Override
